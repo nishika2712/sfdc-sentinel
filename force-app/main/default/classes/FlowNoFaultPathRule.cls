@@ -3,11 +3,11 @@ public class FlowNoFaultPathRule implements IAuditRule {
     public List<AuditFinding> runCheck() {
         List<AuditFinding> findings = new List<AuditFinding>();
 
-        String query = 'SELECT Id, ApiName, Label, ActiveVersion.Definition, ActiveVersionId ' +
-                        'FROM FlowDefinitionView WHERE IsActive = true';
+        String query = 'SELECT Id, ApiName, Label, ActiveVersionId ' +
+                'FROM FlowDefinitionView WHERE IsActive = true AND ProcessType = \'Flow\'';
 
         HttpRequest req = new HttpRequest();
-        req.setEndpoint('callout:Sentinel_Tooling_API/services/data/v60.0/tooling/query/?q=' + EncodingUtil.urlEncode(query, 'UTF-8'));
+        req.setEndpoint('callout:Sentinel_Tooling_API/services/data/v60.0/query/?q=' + EncodingUtil.urlEncode(query, 'UTF-8'));
         req.setMethod('GET');
         req.setHeader('Content-Type', 'application/json');
 
