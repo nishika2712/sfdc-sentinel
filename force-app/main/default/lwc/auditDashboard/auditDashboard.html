@@ -1,0 +1,34 @@
+<template>
+    <lightning-card title="SFDC Sentinel - Org Audit Dashboard" icon-name="standard:metrics">
+        <div class="slds-m-around_medium">
+            <lightning-button
+                variant="brand"
+                label={scanButtonLabel}
+                onclick={handleStartScan}
+                disabled={isScanning}
+            ></lightning-button>
+
+            <template if:true={isScanning}>
+                <div class="slds-m-top_small">
+                    <lightning-progress-bar value={progressPercent} size="large"></lightning-progress-bar>
+                    <p class="slds-text-body_small slds-m-top_x-small">{progressLabel}</p>
+                </div>
+            </template>
+
+            <template if:true={hasFindings}>
+                <div class="slds-m-top_medium">
+                    <lightning-datatable
+                        key-field="Id"
+                        data={findings}
+                        columns={columns}
+                        hide-checkbox-column="true"
+                    ></lightning-datatable>
+                </div>
+            </template>
+
+            <template if:false={hasFindings}>
+                <p class="slds-m-top_medium slds-text-color_weak">No findings yet. Run a scan to audit your org.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>
