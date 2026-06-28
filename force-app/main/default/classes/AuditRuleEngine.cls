@@ -10,14 +10,14 @@ public class AuditRuleEngine {
         ];
 
         for (Audit_Rule__mdt ruleConfig : activeRules) {
-            List<AuditFinding> ruleFindings = runSingleRule(ruleConfig);
+            List<AuditFinding> ruleFindings = runSingleRulePublic(ruleConfig);
             allFindings.addAll(ruleFindings);
         }
 
         return allFindings;
     }
 
-    private List<AuditFinding> runSingleRule(Audit_Rule__mdt ruleConfig) {
+    public List<AuditFinding> runSingleRulePublic(Audit_Rule__mdt ruleConfig) {
         List<AuditFinding> findings = new List<AuditFinding>();
 
         try {
