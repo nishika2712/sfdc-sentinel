@@ -1,44 +1,61 @@
 <template>
-    <lightning-card title="SFDC Sentinel - Org Audit Dashboard" icon-name="standard:metrics">
-        <div class="slds-m-around_medium">
+    <template if:false={scanStarted}>
+        <div class="landing">
+            <h1 class="title">Sentinel Dashboard</h1>
             <lightning-button
                 variant="brand"
-                label={scanButtonLabel}
+                label="Run Scan"
                 onclick={handleStartScan}
-                disabled={isScanning}
             ></lightning-button>
-
-            <template if:true={isScanning}>
-                <div class="slds-m-top_small">
-                    <lightning-progress-bar value={progressPercent} size="large"></lightning-progress-bar>
-                    <p class="slds-text-body_small slds-m-top_x-small">{progressLabel}</p>
-                </div>
-            </template>
-
-            <template if:true={showFlow}>
-                <div class="slds-m-top_medium">
-                    <lightning-flow
-                        flow-api-name="Remediate_Missing_FLS"
-                        onstatuschange={handleFlowStatusChange}>
-                    </lightning-flow>
-                </div>
-            </template>
-
-            <template if:true={hasFindings}>
-                <div class="slds-m-top_medium">
-                    <lightning-datatable
-                        key-field="Id"
-                        data={findings}
-                        columns={columns}
-                        hide-checkbox-column="true"
-                        onrowaction={handleRowAction}
-                    ></lightning-datatable>
-                </div>
-            </template>
-
-            <template if:false={hasFindings}>
-                <p class="slds-m-top_medium slds-text-color_weak">No findings yet. Run a scan to audit your org.</p>
-            </template>
         </div>
-    </lightning-card>
+    </template>
+
+    <template if:true={scanStarted}>
+        <lightning-card title="SFDC Sentinel - Org Audit Dashboard" icon-name="standard:metrics">
+            <div class="slds-m-around_medium">
+
+                <lightning-button
+                    variant="brand"
+                    label={scanButtonLabel}
+                    onclick={handleStartScan}
+                    disabled={isScanning}
+                ></lightning-button>
+
+                <template if:true={isScanning}>
+                    <div class="slds-m-top_small">
+                        <lightning-progress-bar value={progressPercent} size="large"></lightning-progress-bar>
+                        <p class="slds-text-body_small slds-m-top_x-small">{progressLabel}</p>
+                    </div>
+                </template>
+
+                <template if:true={showFlow}>
+                    <div class="slds-m-top_medium">
+                        <lightning-flow
+                            flow-api-name="Remediate_Missing_FLS"
+                            onstatuschange={handleFlowStatusChange}>
+                        </lightning-flow>
+                    </div>
+                </template>
+
+                <template if:true={hasFindings}>
+                    <div class="slds-m-top_medium">
+                        <lightning-datatable
+                            key-field="Id"
+                            data={findings}
+                            columns={columns}
+                            hide-checkbox-column="true"
+                            onrowaction={handleRowAction}
+                        ></lightning-datatable>
+                    </div>
+                </template>
+
+                <template if:true={showNoFindings}>
+                    <p class="slds-m-top_medium slds-text-color_weak">
+                        No findings detected. Your org looks clean.
+                    </p>
+                </template>
+
+            </div>
+        </lightning-card>
+    </template>
 </template>

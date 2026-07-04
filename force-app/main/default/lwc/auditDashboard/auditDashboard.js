@@ -26,6 +26,7 @@ export default class AuditDashboard extends LightningElement {
     columns = COLUMNS;
     findings = [];
     isScanning = false;
+    scanStarted = false;
     progressLabel = '';
     progressPercent = 0;
     subscription = null;
@@ -77,6 +78,7 @@ export default class AuditDashboard extends LightningElement {
     }
 
     handleStartScan() {
+        this.scanStarted = true;
         this.isScanning = true;
         this.showFlow = false;
         this.progressPercent = 0;
@@ -105,6 +107,10 @@ export default class AuditDashboard extends LightningElement {
 
     get hasFindings() {
         return this.findings && this.findings.length > 0;
+    }
+
+    get showNoFindings() {
+        return !this.isScanning && this.scanStarted && this.findings.length === 0;
     }
 
     get scanButtonLabel() {
