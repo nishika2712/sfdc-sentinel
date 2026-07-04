@@ -11,6 +11,15 @@ const COLUMNS = [
     { label: 'Object', fieldName: 'Object_API_Name__c' },
     { label: 'Field/Component', fieldName: 'Field_Or_Component_Name__c' },
     { label: 'Issue', fieldName: 'Issue_Description__c', wrapText: true },
+    {
+        type: 'button',
+        typeAttributes: {
+            label: 'Remediate',
+            name: 'remediate',
+            variant: 'brand-outline',
+            disabled: { fieldName: 'isNotFLS' }
+        }
+    }
 ];
 
 export default class AuditDashboard extends LightningElement {
@@ -21,12 +30,16 @@ export default class AuditDashboard extends LightningElement {
     progressPercent = 0;
     subscription = null;
     wiredFindingsResult;
+    showFlow = false;
 
     @wire(getFindings)
     wiredFindings(result) {
         this.wiredFindingsResult = result;
         if (result.data) {
-            this.findings = result.data;
+            this.findings = result.data.map(f => ({
+                ...f,
+                isNotFLS: f.Rule_Name__c !== 'Missing Field Level Security'
+            }));
         }
     }
 
@@ -65,6 +78,7 @@ export default class AuditDashboard extends LightningElement {
 
     handleStartScan() {
         this.isScanning = true;
+        this.showFlow = false;
         this.progressPercent = 0;
         this.progressLabel = 'Starting scan...';
 
@@ -73,6 +87,20 @@ export default class AuditDashboard extends LightningElement {
                 this.isScanning = false;
                 this.progressLabel = 'Scan failed: ' + (error.body ? error.body.message : error.message);
             });
+    }
+
+    handleRowAction(event) {
+        const actionName = event.detail.action.name;
+        if (actionName === 'remediate') {
+            this.showFlow = true;
+        }
+    }
+
+    handleFlowStatusChange(event) {
+        if (event.detail.status === 'FINISHED') {
+            this.showFlow = false;
+            refreshApex(this.wiredFindingsResult);
+        }
     }
 
     get hasFindings() {

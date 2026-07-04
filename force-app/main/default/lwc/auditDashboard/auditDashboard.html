@@ -15,6 +15,15 @@
                 </div>
             </template>
 
+            <template if:true={showFlow}>
+                <div class="slds-m-top_medium">
+                    <lightning-flow
+                        flow-api-name="Remediate_Missing_FLS"
+                        onstatuschange={handleFlowStatusChange}>
+                    </lightning-flow>
+                </div>
+            </template>
+
             <template if:true={hasFindings}>
                 <div class="slds-m-top_medium">
                     <lightning-datatable
@@ -22,6 +31,7 @@
                         data={findings}
                         columns={columns}
                         hide-checkbox-column="true"
+                        onrowaction={handleRowAction}
                     ></lightning-datatable>
                 </div>
             </template>
