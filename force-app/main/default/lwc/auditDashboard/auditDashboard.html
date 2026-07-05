@@ -14,17 +14,47 @@
         <lightning-card title="SFDC Sentinel - Org Audit Dashboard" icon-name="standard:metrics">
             <div class="slds-m-around_medium">
 
-                <lightning-button
-                    variant="brand"
-                    label={scanButtonLabel}
-                    onclick={handleStartScan}
-                    disabled={isScanning}
-                ></lightning-button>
+                <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                    <div class="slds-col">
+                        <lightning-button
+                            variant="brand"
+                            label={scanButtonLabel}
+                            onclick={handleStartScan}
+                            disabled={isScanning}
+                        ></lightning-button>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-button
+                            variant="neutral"
+                            label={testButtonLabel}
+                            onclick={handleRunTests}
+                            disabled={isRunningTests}
+                        ></lightning-button>
+                    </div>
+                    <template if:true={testStatusMessage}>
+                        <div class="slds-col slds-align-middle">
+                            <span class="slds-text-body_small slds-text-color_weak">
+                                {testStatusMessage}
+                            </span>
+                        </div>
+                    </template>
+                </div>
 
                 <template if:true={isScanning}>
-                    <div class="slds-m-top_small">
-                        <lightning-progress-bar value={progressPercent} size="large"></lightning-progress-bar>
-                        <p class="slds-text-body_small slds-m-top_x-small">{progressLabel}</p>
+                    <div class="slds-m-top_small slds-m-bottom_medium">
+                        <div class="slds-grid slds-grid_align-center slds-m-bottom_small">
+                            <lightning-spinner
+                                alternative-text="Scanning..."
+                                size="medium">
+                            </lightning-spinner>
+                        </div>
+                        <lightning-progress-bar
+                            value={progressPercent}
+                            size="large">
+                        </lightning-progress-bar>
+                        <p class="slds-text-body_small slds-m-top_x-small slds-text-align_center">
+                            {progressLabel}
+                        </p>
                     </div>
                 </template>
 
