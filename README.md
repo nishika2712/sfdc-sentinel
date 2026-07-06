@@ -11,7 +11,7 @@
 
 ## Demo
 
-[▶ Watch the demo video](YOUR_LOOM_LINK_HERE)
+[▶ Watch the demo video](https://www.loom.com/share/7128d0044fe94595b3e640d053526ca4)
 
 ![Dashboard Screenshot](screenshots/dashboard.png)
 
