@@ -300,4 +300,4 @@ The entire remediation is declarative — no Apex, no code deployment required.
 **Nishika Jain**
 Technical Consultant @ Salesforce | Agentforce Specialist
 
-[LinkedIn](https://www.linkedin.com/in/nishika-jain) · [GitHub](https://github.com/nishika2712)
+[LinkedIn](https://www.linkedin.com/in/nishikajain09/) · [GitHub](https://github.com/nishika2712)
