@@ -172,7 +172,7 @@ force-app/main/default/
 
 ```bash
 git clone https://github.com/nishika2712/sfdc-sentinel.git
-cd sfdc-sentinel/sfdc-sentinel
+cd sfdc-sentinel
 sf org login web --alias sentinel-dev --instance-url https://login.salesforce.com
 sf config set target-org sentinel-dev
 ```
@@ -260,13 +260,13 @@ Expected: all tests pass, all rule classes above 75% coverage.
 Custom fields with no FLS configured are invisible in the Salesforce UI by default but fully accessible via API. A common compliance gap in orgs that add fields rapidly without following a security review process. The rule queries `FieldPermissions` directly — if no permission set or profile grants Read or Edit on a field, it is flagged High severity.
 
 **Low Test Coverage**
-Classes below the 75% threshold are a production deployment blocker and indicate untested business logic that is a regression risk. This rule queries `ApexCodeCoverageAggregate` via the Tooling API — the same dataset Salesforce uses for org-wide coverage calculations.
+The `UnusedTestCoverageRule` class implements the Low Test Coverage rule. Apex classes with less than 75% test coverage can block production deployments and may indicate insufficiently tested business logic, increasing the risk of regressions. The rule retrieves coverage data from `ApexCodeCoverageAggregate` through the Tooling API, using the same dataset Salesforce relies on for org-wide code coverage calculations. Anonymous Apex and test classes are excluded from the results.
 
 **Flow No Fault Path**
-Active flows with Create, Update, Delete, or Action Call elements but no fault connector fail silently in production — leaving data in inconsistent states with no error notification. The rule fetches each active Flow's full metadata definition via the Tooling API and inspects element structure for missing `faultConnector` entries.
+Active flows with Create Records, Update Records, Delete Records, or Action Call elements but no fault connector fail silently in production — leaving data in inconsistent states with no error notification to admins. This is one of the most common causes of mysterious org data issues. The rule fetches each active Flow's full metadata definition via the Tooling API and inspects element structure for missing `faultConnector` entries.
 
 **SOQL In Loop**
-SOQL queries inside loops are the most common cause of `System.LimitException: Too many SOQL queries` errors in production. Detected via regex static analysis on Apex class bodies fetched through the Tooling API. Test classes and mock classes are excluded.
+SOQL queries inside loops are the most common cause of `System.LimitException: Too many SOQL queries: 101` errors in production. Detected via regex static analysis on Apex class bodies fetched through the Tooling API — flags any class where a `[SELECT` keyword appears within 300 characters after a `for` or `while` loop opening brace. Test classes and mock classes are excluded.
 
 ---
 
@@ -289,20 +289,15 @@ The entire remediation is declarative — no Apex, no code deployment required.
 
 - [ ] Hardcoded IDs rule — detect `Id` literals in Apex class bodies
 - [ ] Missing Sharing Model rule — flag classes without `with sharing` keyword
-- [ ] Scan history trend chart — org health score over time
-- [ ] Email notification on critical findings
+- [ ] Scan history trend chart — LWC recharts showing org health score over time
+- [ ] Email notification on critical findings — Schedulable Apex + OrgWideEmailAddress
+- [ ] Scheduled auto-scan — Schedulable Apex wrapper around the Queueable engine
 - [ ] 2GP unlocked package — installable in any org via package version URL
 
 ---
 
 ## Author
 
-<<<<<<< Updated upstream
-**Nishika Jain**
-Technical Consultant @ Salesforce | Agentforce Specialist
-
-[LinkedIn](https://www.linkedin.com/in/nishikajain09/) · [GitHub](https://github.com/nishika2712)
-=======
 **Nishika Jain** Salesforce Developer | Agentforce Specialist
 
 [LinkedIn](https://www.linkedin.com/in/nishikajain09) · [GitHub](https://github.com/nishika2712)
@@ -311,4 +306,3 @@ Technical Consultant @ Salesforce | Agentforce Specialist
 ## License
 
 MIT
->>>>>>> Stashed changes
