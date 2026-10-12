@@ -297,7 +297,18 @@ The entire remediation is declarative — no Apex, no code deployment required.
 
 ## Author
 
+<<<<<<< Updated upstream
 **Nishika Jain**
 Technical Consultant @ Salesforce | Agentforce Specialist
 
 [LinkedIn](https://www.linkedin.com/in/nishikajain09/) · [GitHub](https://github.com/nishika2712)
+=======
+**Nishika Jain** Salesforce Developer | Agentforce Specialist
+
+[LinkedIn](https://www.linkedin.com/in/nishikajain09) · [GitHub](https://github.com/nishika2712)
+---
+
+## License
+
+MIT
+>>>>>>> Stashed changes
