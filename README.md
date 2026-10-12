@@ -27,12 +27,12 @@ The tool covers the full audit lifecycle: **detect → fix → verify** — all 
 
 ### Audit Rules (v1)
 
-| Rule | Severity | Category | Detection Method |
-|---|---|---|---|
-| Missing Field Level Security | High | Security | SOQL on `FieldPermissions` — flags custom fields with zero access grants across all profiles and permission sets |
-| Low Test Coverage | Medium | Code Quality | Tooling API → `ApexCodeCoverageAggregate` — flags Apex classes below the 75% threshold |
-| Flow No Fault Path | Medium | Automation | Tooling API → Flow metadata — flags active flows with record or action elements and no fault connector defined |
-| SOQL In Loop | High | Code Quality | Tooling API → `ApexClass` body — regex static analysis detecting SOQL inside for/while loops |
+| Rule                         | Severity | Category     | Detection Method                                                                                                 |
+| ---------------------------- | -------- | ------------ | ---------------------------------------------------------------------------------------------------------------- |
+| Missing Field Level Security | High     | Security     | SOQL on `FieldPermissions` — flags custom fields with zero access grants across all profiles and permission sets |
+| Low Test Coverage            | Medium   | Code Quality | Tooling API → `ApexCodeCoverageAggregate` — flags Apex classes below the 75% threshold                           |
+| Flow No Fault Path           | Medium   | Automation   | Tooling API → Flow metadata — flags active flows with record or action elements and no fault connector defined   |
+| SOQL In Loop                 | High     | Code Quality | Tooling API → `ApexClass` body — regex static analysis detecting SOQL inside for/while loops                     |
 
 ---
 
@@ -89,7 +89,7 @@ The tool covers the full audit lifecycle: **detect → fix → verify** — all 
 
 **OAuth 2.0 Client Credentials Flow** — Tooling API integration uses a proper Named Credential with Client Credentials Flow, not session IDs. This makes the tool safe to package and install in any org without credential leakage.
 
-**Platform Events for real-time UI** — each rule publishes `Audit_Progress__e` on completion; the LWC subscribes via `lightning/empApi`. No polling, no page refresh — pure event-driven progress tracking.
+**Platform Events for real-time UI** — each rule publishes `Audit_Progress__e` on completion; the LWC subscribes via `lightning/empApi`. Scan progress is event-driven: each rule publishes Audit_Progress__e and the LWC subscribes via lightning/empApi. A timed fallback animates the progress bar if events are delayed, and the test-coverage refresh polls the Tooling API for run status.
 
 **Error isolation per rule** — each rule runs inside a try/catch in the engine. One failing rule surfaces as its own finding instead of crashing the entire scan.
 
@@ -99,18 +99,18 @@ The tool covers the full audit lifecycle: **detect → fix → verify** — all 
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Backend Logic | Apex — interface + OOP implementations |
-| Async Processing | Queueable Apex (`Database.AllowsCallouts`) |
+| Layer                | Technology                                                               |
+| -------------------- | ------------------------------------------------------------------------ |
+| Backend Logic        | Apex — interface + OOP implementations                                   |
+| Async Processing     | Queueable Apex (`Database.AllowsCallouts`)                               |
 | External Integration | Tooling API (REST), OAuth 2.0 Client Credentials Flow, Named Credentials |
-| Real-time Updates | Platform Events + `lightning/empApi` |
-| Configuration | Custom Metadata Types (`Audit_Rule__mdt`) |
-| Data Persistence | Custom Object (`Audit_Finding__c`) |
-| Frontend | Lightning Web Components (`@wire`, `refreshApex`, `empApi`) |
-| Remediation | Screen Flow (declarative — no Apex required) |
-| Testing | Apex Test Classes + HTTP Callout Mocks (`HttpCalloutMock`) |
-| Dev Tooling | Salesforce CLI, VS Code, Scratch Orgs, Source Tracking |
+| Real-time Updates    | Platform Events + `lightning/empApi`                                     |
+| Configuration        | Custom Metadata Types (`Audit_Rule__mdt`)                                |
+| Data Persistence     | Custom Object (`Audit_Finding__c`)                                       |
+| Frontend             | Lightning Web Components (`@wire`, `refreshApex`, `empApi`)              |
+| Remediation          | Screen Flow (declarative — no Apex required)                             |
+| Testing              | Apex Test Classes + HTTP Callout Mocks (`HttpCalloutMock`)               |
+| Dev Tooling          | Salesforce CLI, VS Code, Scratch Orgs, Source Tracking                   |
 
 ---
 
@@ -221,6 +221,7 @@ The Tooling API integration uses OAuth 2.0 Client Credentials Flow.
 ### Step 5: Add Remote Site Setting
 
 Setup → Remote Site Settings → New
+
 - Name: `Self_Tooling_API`
 - URL: your org's My Domain URL
 
